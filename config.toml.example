@@ -1,0 +1,61 @@
+# VREC 配置文件
+# 复制此文件为 config.toml 并修改相应配置
+
+[server]
+port = "8080"
+
+[database]
+host = "localhost"
+port = "5432"
+username = "postgres"
+password = "postgres"
+name = "vrec"
+
+[s3]
+endpoint = "s3.amazonaws.com"
+access_key = ""
+secret_key = ""
+bucket = "vrec"
+region = "us-east-1"
+url_expire_days = 3
+
+[asr]
+api_key = ""
+model = "fun-asr"              # ASR 模型名称：fun-asr、fun-asr-2025-11-07、fun-asr-mtl
+
+[llm]
+enabled = false
+api_url = ""                      # LLM API 地址（如 OpenAI compatible API）
+api_key = ""                      # LLM API Key
+model = "gpt-3.5-turbo"          # 默认模型
+meeting_summary_prompt = '''你是一个专业的会议纪要生成助手。请根据提供的会议转写文本，生成结构化的会议纪要，包括：
+  1. 会议主题/标题
+  2. 会议时间（如果提到）
+  3. 与会人员（如果提到）
+  4. 会议要点/讨论内容
+  5. 会议决议/下一步行动
+
+请用中文回复，只输出会议纪要内容，不要有其他解释。'''  # 会议纪要 prompt 模板
+temperature = 0.7                 # 生成温度，0-2 之间，越高越随机
+
+[pricing]
+storage_per_gb_day = 0.01        # S3 存储价格（元/GB/天）
+asr_per_minute = 0.1            # ASR 转写价格（元/分钟）
+subtitle_per_minute = 0.01      # 字幕按分钟计费（元/分钟）
+meeting_note_per_token = 0.001   # 会议纪要按 token 计费（元/千token）
+low_balance_threshold = 1.0     # 低余额阈值（低于此值 QPS 降至 low_balance_qps，0 表示不启用）
+low_balance_qps = 3              # 低余额时的 QPS 限制
+
+[logger]
+level = "info"
+format = "json"
+path = "app.log"              # 日志文件路径，为空则仅输出到 stderr
+max_size = 100                # 单个日志文件最大大小（MB）
+max_backups = 30              # 保留的旧日志文件数量
+max_age = 7                   # 旧日志文件保留天数
+compress = true               # 是否压缩旧日志文件
+
+[auth]
+token_expire_days = 7
+jwt_enabled = false
+jwt_secret = "your-secret-key-change-in-production"
